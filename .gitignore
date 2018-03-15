@@ -1,0 +1,8 @@
+# project
+.vscode
+
+# misc
+.DS_Store
+.env
+
+

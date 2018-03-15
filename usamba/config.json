@@ -1,0 +1,31 @@
+{
+  "name": "usamba",
+  "version": "0.1",
+  "slug": "usamba",
+  "description": "samba share with user power",
+  "startup": "before",
+  "boot": "manual",
+  "map": ["config:rw", "ssl:rw", "addons:rw", "share:rw", "backup:rw"],
+  "options": {
+    "workgroup": "minik",
+    "name": "minikhome",
+    "username": "",
+    "password": "",
+    "interface": "",
+    "hassio": "",
+    "data":"guest",
+    "user":"",
+    "tmp":""
+  },
+  "schema": {
+    "workgroup": "str",
+    "name": "str",
+    "username": "str",
+    "password": "str",
+    "interface": "str",
+    "hassio": "str",
+    "data": "str",
+    "user": "str",
+    "tmp": "str"
+  }
+}

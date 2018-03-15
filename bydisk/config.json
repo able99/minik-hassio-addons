@@ -1,0 +1,24 @@
+{
+  "name": "bydisk",
+  "version": "0.1",
+  "slug": "bydisk",
+  "description": "net disk by baidu pcs",
+  "startup": "before",
+  "boot": "manual",
+  "map": ["share:rw"],
+  "options": {
+    "byBasePath": "/minik/",
+    "authCode": "",
+    "disks": [
+      {"disabled": true, "name": "download", "byPathname": "download", "pathname": "/share/tmp", "direction": "syncdown"},
+      {"disabled": true, "name": "data", "byPathname": "data", "pathname": "/share/data/data", "direction": "syncup"}
+    ]
+  },
+  "schema": {
+    "byBasePath": "str",
+    "authCode": "str",
+    "disks": [
+      {"disabled":"bool", "name": "str", "byPathname": "str", "pathname": "str", "direction": "str"}
+    ]
+  }
+}
