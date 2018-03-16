@@ -3,82 +3,128 @@ echo starting
 
 set -e
 
-CONFIG_PATH=/data/options.json
+PATHNAME_SMB=/etc/smb.conf
+PATHNAME_OPTIONS=/data/options.json
 
-WORKGROUP=$(jq --raw-output '.workgroup' $CONFIG_PATH)
-NAME=$(jq --raw-output '.name' $CONFIG_PATH)
-GUEST=$(jq --raw-output '.guest' $CONFIG_PATH)
-USERNAME=$(jq --raw-output '.username // empty' $CONFIG_PATH)
-PASSWORD=$(jq --raw-output '.password // empty' $CONFIG_PATH)
-INTERFACE=$(jq --raw-output '.interface // empty' $CONFIG_PATH)
-MAP_HASSIO=$(jq --raw-output '.hassio' $CONFIG_PATH)
-MAP_DATA=$(jq --raw-output '.data' $CONFIG_PATH)
-MAP_USER=$(jq --raw-output '.user' $CONFIG_PATH)
-MAP_TMP=$(jq --raw-output '.tmp' $CONFIG_PATH)
+function showWelcome() {
+    echo 'starting by config:'
+    cat $PATHNAME_OPTIONS
+    echo '-------------------'
+}
+function configGlobal() {
+    echo '-config global-'
+    NAME=$(jq --raw-output '.name' $PATHNAME_OPTIONS)
+    WORKGROUP=$(jq --raw-output '.workgroup' $PATHNAME_OPTIONS)
+    INTERFACE=$(jq --raw-output '.interface // empty' $PATHNAME_OPTIONS)
+    LOGLEVEL=$(jq --raw-output '.loglevel // empty' $PATHNAME_OPTIONS)
+    GUEST=$(jq --raw-output '.guest' $PATHNAME_OPTIONS)
+    GUESTCONFIG1=
+    GUESTCONFIG2=
+    if [ "$GUEST" == "true" ]; then
+        GUESTCONFIG1="guest account = root"
+        GUESTCONFIG2="map to guest = Bad Password"
+    fi
 
-function write_config() {
-    echo "do write_config $1 $2 $3 $4 $5"
-    if [ "$5" == "guest" ]; then
+    echo "
+[global]
+   netbios name = $NAME
+   workgroup = $WORKGROUP
+   server string = Minik Samba 
+   security: user
+
+   load printers = no
+   disable spoolss = yes
+
+   log level = $LOGLEVEL
+   
+   bind interfaces only = yes
+   interfaces = $INTERFACE
+
+   $GUESTCONFIG1
+   $GUESTCONFIG2
+
+" > $PATHNAME_SMB
+}
+
+function configUser() {
+    echo '-config user-'
+    for i in $(jq --raw-output 'range(.users|length)' $PATHNAME_OPTIONS); 
+    do 
+        USERNAME=$(jq --raw-output ".users[$i].username" $PATHNAME_OPTIONS)
+        PASSWORD=$(jq --raw-output ".users[$i].password" $PATHNAME_OPTIONS)
+        echo "set: $USERNAME:$PASSWORD"
+        addgroup -g 1000 "$USERNAME"
+        adduser -D -H -G "$USERNAME" -s /bin/false -u 1000 "$USERNAME"
+        echo -e "$PASSWORD\n$PASSWORD" | smbpasswd -a -s -c /etc/smb.conf "$USERNAME"
+    done  
+}
+
+function configItem() {
+    echo "config item: use=$1 name=$2 path=$3 browseable=$4 writeable=$5"
+    BROWSEABLE=no
+    WRITEABLE=no
+    if [ "$4" == "true" ]; then
+        BROWSEABLE=yes
+    fi
+    if [ "$5" == "true" ]; then
+        WRITEABLE=yes
+    fi
+
+    if [ "$1" == "guest" ]; then
         echo "
-[$1]
-   browseable = $3
-   writeable = $4
-   path = $2
+[$2]
+   browseable = $BROWSEABLE
+   writeable = $WRITEABLE
+   path = $3
 
    guest ok = yes
    guest only = yes
    public = yes
-" >> /etc/smb.conf
-    elif [ "$2" == "user" ]; then
-        echo "
-[$1]
-   browseable = $3
-   writeable = $4
-   path = $2
 
-   valid users = $USERNAME
+" >> $PATHNAME_SMB
+    elif [ -n "$2" ]; then
+        echo "
+[$2]
+   browseable = $BROWSEABLE
+   writeable = $WRITEABLE
+   path = $3
+
+   valid users = $1
    force user = root
    force group = root
-" >> /etc/smb.conf
+
+" >> $PATHNAME_SMB
    fi
 }
 
-echo 'common config' 
-##
-# common config
-if [ -n "$USERNAME" ]; then
-    addgroup -g 1000 "$USERNAME"
-    adduser -D -H -G "$USERNAME" -s /bin/false -u 1000 "$USERNAME"
-    echo -e "$PASSWORD\n$PASSWORD" | smbpasswd -a -s -c /etc/smb.conf "$USERNAME"
-fi
+function configItems() {
+    echo '-config items-'
+    for i in $(jq --raw-output 'range(.items|length)' $PATHNAME_OPTIONS); 
+    do 
+        ARGS=$(jq --raw-output ".items[$i]|.use, .name, .pathname, .browseable, .writeable" $PATHNAME_OPTIONS | xargs)
+        configItem $ARGS
+    done  
+}
 
-sed -i "s/%%WORKGROUP%%/$WORKGROUP/g" /etc/smb.conf
-sed -i "s/%%NAME%%/$NAME/g" /etc/smb.conf
-sed -i "s/%%INTERFACE%%/$INTERFACE/g" /etc/smb.conf
+function showStart() {
+    echo 'ready:'
+    cat $PATHNAME_SMB
+    echo '-----------'
+}
 
-echo 'section config'
-##
-# share section
-write_config config /config yes yes $MAP_HASSIO 
-write_config addons /addons yes yes $MAP_HASSIO 
-write_config ssl /ssl yes yes $MAP_HASSIO 
-write_config backup /backup yes yes $MAP_HASSIO 
-write_config data /share/data yes yes $MAP_DATA 
-write_config user /share/data no yes $MAP_USER
-write_config tmp /share/tmp no yes $MAP_TMP
 
-##
-# start
-echo '/etc/smb.conf'
-cat /etc/smb.conf
-echo '------------'
 
-nmbd -F -S -s /etc/smb.conf &
+showWelcome
+configGlobal
+configUser
+configItems
+showStart
+
+nmbd -F -S -s $PATHNAME_SMB &
 NMBD_PID=$!
-smbd -F -S -s /etc/smb.conf &
+smbd -F -S -s $PATHNAME_SMB &
 SMBD_PID=$!
 
-# Register stop
 function stop_samba() {
     kill -15 "$NMBD_PID"
     kill -15 "$SMBD_PID"

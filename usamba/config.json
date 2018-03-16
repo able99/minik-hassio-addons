@@ -1,31 +1,78 @@
 {
   "name": "usamba",
-  "version": "0.1",
+  "version": "0.9",
   "slug": "usamba",
-  "description": "samba share with user power",
+  "description": "samba share",
   "startup": "before",
   "boot": "manual",
   "map": ["config:rw", "ssl:rw", "addons:rw", "share:rw", "backup:rw"],
+  "host_network": true,
   "options": {
-    "workgroup": "minik",
     "name": "minikhome",
-    "username": "",
-    "password": "",
+    "workgroup": "minik",
     "interface": "",
-    "hassio": "",
-    "data":"guest",
-    "user":"",
-    "tmp":""
+    "loglevel": 0,
+    "guest": true,
+    "users": [
+      {
+        "username": "minik",
+        "password": ""
+      }
+    ],
+    "items": [
+      {
+        "name": "music",
+        "use": "guest",
+        "pathname": "/share/data/music",
+        "browseable": true,
+        "writeable": true
+      },
+      {
+        "name": "memory",
+        "use": "guest",
+        "pathname": "/share/data/memory",
+        "browseable": true,
+        "writeable": true
+      },
+      {
+        "name": "DCIM",
+        "use": "guest",
+        "pathname": "/share/data/DCIM",
+        "browseable": true,
+        "writeable": true
+      },
+      {
+        "name": "private",
+        "use": "minik",
+        "pathname": "/share/data/private",
+        "browseable": false,
+        "writeable": true
+      },
+      {
+        "name": "tools",
+        "use": "",
+        "pathname": "/share/data/tools",
+        "browseable": true,
+        "writeable": true
+      }
+    ]
   },
   "schema": {
-    "workgroup": "str",
     "name": "str",
-    "username": "str",
-    "password": "str",
+    "workgroup": "str",
     "interface": "str",
-    "hassio": "str",
-    "data": "str",
-    "user": "str",
-    "tmp": "str"
+    "loglevel": "int",
+    "guest": "bool",
+    "users": [{
+      "username": "str",
+      "password": "str"
+    }],
+    "items": [{
+      "name": "str",
+      "use": "str",
+      "pathname": "str",
+      "browseable": "bool",
+      "writeable": "bool"
+    }]
   }
 }
