@@ -7,12 +7,9 @@ ENV LANG C.UTF-8
 RUN echo 'http://mirrors.ustc.edu.cn/alpine/v3.5/main' > /etc/apk/repositories
 RUN echo 'http://mirrors.ustc.edu.cn/alpine/v3.5/community' >> /etc/apk/repositories
 RUN apk update
-RUN apk add --no-cache python python-dev py-pip
-RUN pip install bypy
+RUN apk add --no-cache jq samba-server samba-common-tools
 
-RUN mkdir /share/bypy
+COPY run.sh /
+RUN chmod a+x /run.sh
 
-COPY run.py /
-RUN chmod a+x /run.py
-
-CMD [ "python", "-u", "/run.py" ]
+CMD [ "/run.sh" ]

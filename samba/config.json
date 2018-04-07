@@ -1,14 +1,15 @@
 {
-  "name": "usamba",
-  "version": "0.9",
-  "slug": "usamba",
+  "name": "samba",
+  "version": "0.1",
+  "slug": "samba",
   "description": "samba share",
+  "url": "https://github.com/able99/minik-hassio-addons",
   "startup": "before",
   "boot": "manual",
   "map": ["config:rw", "ssl:rw", "addons:rw", "share:rw", "backup:rw"],
   "host_network": true,
   "options": {
-    "name": "minikhome",
+    "name": "home",
     "workgroup": "minik",
     "interface": "",
     "loglevel": 0,
@@ -50,9 +51,23 @@
       },
       {
         "name": "tools",
-        "use": "",
+        "use": "guest",
         "pathname": "/share/data/tools",
         "browseable": true,
+        "writeable": true
+      },
+      {
+        "name": "share",
+        "use": "guest",
+        "pathname": "/share/tmp/share",
+        "browseable": true,
+        "writeable": true
+      },
+      {
+        "name": "download",
+        "use": "minik",
+        "pathname": "/share/tmp/download",
+        "browseable": false,
         "writeable": true
       }
     ]

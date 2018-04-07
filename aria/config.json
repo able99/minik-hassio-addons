@@ -1,0 +1,15 @@
+{
+  "name": "aria",
+  "version": "0.1",
+  "slug": "aria",
+  "description": "aria downloader",
+  "url": "https://github.com/able99/minik-hassio-addons",
+  "startup": "application",
+  "boot": "auto",
+  "map": ["share:rw"],
+  "host_network": true,
+  "options": {
+  },
+  "schema": {
+  }
+}

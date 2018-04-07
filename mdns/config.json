@@ -1,0 +1,13 @@
+{
+    "name": "phddns",
+    "version": "0.1.0",
+    "slug": "phddns",
+    "description": "oray ntranet penetration",
+    "url": "",
+    "startup": "application",
+    "boot": "auto",
+    "options": {},
+    "schema": {},
+    "host_network": true,
+    "host_ipc": true
+}

@@ -3,6 +3,7 @@
   "version": "0.1",
   "slug": "bydisk",
   "description": "net disk by baidu pcs",
+  "url": "https://github.com/able99/minik-hassio-addons",
   "startup": "before",
   "boot": "manual",
   "map": ["share:rw"],
@@ -10,8 +11,8 @@
     "byBasePath": "/minik/",
     "authCode": "",
     "disks": [
-      {"disabled": true, "name": "download", "byPathname": "download", "pathname": "/share/tmp", "direction": "syncdown"},
-      {"disabled": true, "name": "data", "byPathname": "data", "pathname": "/share/data/data", "direction": "syncup"}
+      {"disabled": false, "name": "download", "byPathname": "download", "pathname": "/share/tmp/download", "direction": "syncdown"},
+      {"disabled": false, "name": "memory", "byPathname": "memory", "pathname": "/share/data/memory", "direction": "syncup"}
     ]
   },
   "schema": {

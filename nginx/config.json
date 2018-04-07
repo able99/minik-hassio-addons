@@ -1,0 +1,49 @@
+{
+  "name": "nginx",
+  "version": "0.1",
+  "slug": "nginx",
+  "description": "nginx port trans",
+  "url": "https://github.com/able99/minik-hassio-addons",
+  "startup": "application",
+  "boot": "auto",
+  "map": ["share:rw"],
+  "host_network": true,
+  "options": {
+    "port": 80,
+    "sites": [
+      {
+        "name": "/",
+        "host": "127.0.0.1",
+        "port": 8123,
+        "path": "/"
+      },
+      {
+        "name": "/aria2/",
+        "host": "127.0.0.1",
+        "port": 6800,
+        "path": "/"
+      },
+      {
+        "name": "/mopidy/",
+        "host": "127.0.0.1",
+        "port": 6680,
+        "path": "/mopidy/"
+      },
+      {
+        "name": "/moped/",
+        "host": "127.0.0.1",
+        "port": 6680,
+        "path": "/moped/"
+      }
+    ]
+  },
+  "schema": {
+    "port": "int",
+    "sites": [{
+      "name": "str",
+      "host": "str",
+      "port": "int",
+      "path": "str"
+    }]
+  }
+}

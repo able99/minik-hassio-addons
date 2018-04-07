@@ -4,35 +4,27 @@ import os
 print 'starting'
 with open("/data/options.json",'r') as load_f:
   obj = json.load(load_f)
-print 'options:'
-print obj
-
+pathbypy = '/share/bypy'
 authCode = obj['authCode']
+byBasePath = obj['byBasePath']
 
 if authCode :
-  cmd = "echo %s | bypy list" % ( authCode )
-  print cmd
-  os.system(cmd)
-  cmd = "cp -r ~/.bypy /share/.bypy"
-  print cmd
-  os.system(cmd)
-else :
-  cmd = "cp -r /share/.bypy ~/.bypy"
-  print cmd
-  os.system(cmd)
-  byBasePath = obj['byBasePath']
+  print 'authing...'
+  cmd = "echo %s | bypy --config-dir %s list" % ( authCode, pathbypy )
+  print cmd, '=>', os.system(cmd)
 
-  for disk in obj['disks']:
-    print "disk:"
-    print disk
-    direction = disk['direction']
-    if not disk['disabled'] or not disk['pathname'] or not disk['byPathname'] or not (direction == 'syncdown' or direction == 'syncup'):
-      continue
+print 'working...'
+for disk in obj['disks']:
+  print "disk:"
+  print disk
+  direction = disk['direction']
+  if disk['disabled'] or not disk['pathname'] or not disk['byPathname'] or not (direction == 'syncdown' or direction == 'syncup'):
+    print 'skip'
+    continue
 
-    src  = byBasePath + disk['byPathname'] if direction == 'syncdown' else disk['pathname'] 
-    dest = disk['pathname'] if direction == 'syncdown' else byBasePath + disk['byPathname'] 
-    cmd = "bypy %s %s %s" % (direction, src, dest)
+  src  = byBasePath + disk['byPathname'] if direction == 'syncdown' else disk['pathname'] 
+  dest = disk['pathname'] if direction == 'syncdown' else byBasePath + disk['byPathname'] 
+  cmd = "bypy --config-dir %s -v -d %s %s %s" % (pathbypy, direction, src, dest)
+  print cmd, '=>', os.system(cmd)
 
-    print cmd
-    os.system(cmd)
-    print '--ok--'
+print '--all ok--'
