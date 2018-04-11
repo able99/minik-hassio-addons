@@ -1,0 +1,20 @@
+{
+    "name": "bricks",
+    "version": "0.1",
+    "slug": "bricks",
+    "description": "minik home assistant components manager",
+    "url": "https://github.com/able99/minik-hassio-addons",
+    "startup": "before",
+    "boot": "manual",
+    "map": ["config:rw"],
+    "options": {      
+      "gitrepo": "",
+      "pull": false,
+      "bricks": [],
+      "options": {}
+    },
+    "schema": {
+
+    }
+  }
+  
