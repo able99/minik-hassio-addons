@@ -7,7 +7,7 @@ ENV LANG C.UTF-8
 RUN echo 'http://mirrors.ustc.edu.cn/alpine/v3.5/main' > /etc/apk/repositories
 RUN echo 'http://mirrors.ustc.edu.cn/alpine/v3.5/community' >> /etc/apk/repositories
 RUN apk update
-RUN apk add --no-cache jq
+RUN apk add --no-cache jq curl git
 
 COPY run.sh /
 RUN chmod a+x /run.sh

@@ -3,6 +3,11 @@ echo 'starting'
 
 PATHNAME_CONFIG=/etc/nginx.conf
 PATHNAME_OPTIONS=/data/options.json
+PATHNAME_RUN=/shar/port
+
+function env() {
+  mkdir -p ${PATHNAME_RUN}
+}
 
 function configStart() {
     PORT=$(jq --raw-output '.port' $PATHNAME_OPTIONS)
@@ -21,7 +26,7 @@ http {
         ''      close;
     }
 
-    access_log /share/port/access.log;
+    access_log ${PATHNAME_RUN}/access.log;
 
     server {
         listen $PORT default_server;
