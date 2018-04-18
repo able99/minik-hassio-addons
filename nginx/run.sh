@@ -67,6 +67,7 @@ function configEnd() {
 " >> $PATHNAME_CONFIG
 }
 
+env
 configStart
 configSites
 configEnd
