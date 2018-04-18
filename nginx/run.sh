@@ -3,7 +3,7 @@ echo 'starting'
 
 PATHNAME_CONFIG=/etc/nginx.conf
 PATHNAME_OPTIONS=/data/options.json
-PATHNAME_RUN=/shar/port
+PATHNAME_RUN=/share/nginx
 
 function env() {
   mkdir -p ${PATHNAME_RUN}

@@ -27,10 +27,11 @@ function list() {
   echo "LIST $1"
   for i in $1/*
   do 
-    DES=${i/${PATHNAME_BRICKS}${BRICK}/$DESPATH}
+    DES=${i/$2/$DESPATH}
     if [ -d $i ]; then
       echo "DIR ${DES}"
-      list $i
+      mkdir -p ${DES}
+      list $i $2
     elif [[ "$i" =~ .*.yaml$ ]]; then
       echo "DEAL ${i}=>${DES}"
       printf "${OPTIONS}\ncat << EOF\n$(cat ${i})\nEOF" | bash > ${DES}
@@ -61,7 +62,7 @@ function bricks() {
       continue
     fi
 
-    list ${PATHNAME_BRICKS}${BRICK}
+    list ${PATHNAME_BRICKS}${BRICK} ${PATHNAME_BRICKS}${BRICK}
   done
 }
 

@@ -1,0 +1,49 @@
+{
+  "name": "frp",
+  "version": "0.1",
+  "slug": "frp",
+  "description": "net penetration",
+  "url": "https://github.com/able99/minik-hassio-addons",
+  "startup": "application",
+  "boot": "auto",
+  "host_network": true,
+  "arch": ["armhf", "amd64", "i386"],
+  "options": {
+    "clinet_name": "minik",
+    "server_ip": "",
+    "server_port": "7000",
+    "auth_token": "minik",
+    "proxys": [
+      {
+        "name": "ssh",
+        "type": "tcp",
+        "local_port": "8123",
+        "remote_port": "9222"
+      },
+      {
+        "name": "ha-8123",
+        "type": "tcp",
+        "local_port": "8123",
+        "remote_port": "9281"
+      },
+      {
+        "name": "ha-80",
+        "type": "tcp",
+        "local_port": "80",
+        "remote_port": "9280"
+      }
+    ]
+  },
+  "schema": {
+    "clinet_name": "str",
+    "server_ip": "str",
+    "server_port": "str",
+    "auth_token": "str",
+    "proxys": [{
+      "name": "str",
+      "type": "str",
+      "local_port": "str",
+      "remote_port": "str"
+    }]
+  }
+}

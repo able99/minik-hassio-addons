@@ -9,7 +9,7 @@
     "map": ["config:rw"],
     "host_network": true,
     "options": {      
-      "gitrepo": "https://github.com/able99/minik-ha-component",
+      "gitrepo": "https://github.com/able99/minik-ha-components",
       "pull": false,
       "bricks": ["base"],
       "options": ["name=home"]
