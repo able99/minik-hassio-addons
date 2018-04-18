@@ -10,8 +10,6 @@ RUN apk update
 RUN apk add --no-cache python python-dev py-pip
 RUN pip install bypy
 
-RUN mkdir /share/bypy
-
 COPY run.py /
 RUN chmod a+x /run.py
 
