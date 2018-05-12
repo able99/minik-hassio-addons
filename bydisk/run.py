@@ -5,7 +5,7 @@ print 'starting'
 with open("/data/options.json",'r') as load_f:
   obj = json.load(load_f)
 pathbypy = '/share/bypy'
-os.system("mkdir -p %s" % (path))
+os.system("mkdir -p %s" % (pathbypy))
 authCode = obj['authCode']
 byBasePath = obj['byBasePath']
 
