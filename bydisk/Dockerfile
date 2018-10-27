@@ -8,7 +8,7 @@ RUN echo 'http://mirrors.ustc.edu.cn/alpine/v3.5/main' > /etc/apk/repositories
 RUN echo 'http://mirrors.ustc.edu.cn/alpine/v3.5/community' >> /etc/apk/repositories
 RUN apk update
 RUN apk add --no-cache python python-dev py-pip
-RUN pip install bypy
+RUN pip install bypy -i https://mirrors.aliyun.com/pypi/simple/
 
 COPY run.py /
 RUN chmod a+x /run.py
