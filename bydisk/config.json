@@ -4,7 +4,8 @@
   "slug": "bydisk",
   "description": "net disk by baidu pcs",
   "url": "https://github.com/able99/minik-hassio-addons",
-  "startup": "before",
+  "arch": ["armhf", "amd64", "i386"],
+  "startup": "application",
   "boot": "manual",
   "map": ["share:rw"],
   "options": {

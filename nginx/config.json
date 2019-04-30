@@ -4,6 +4,7 @@
   "slug": "nginx",
   "description": "nginx port trans",
   "url": "https://github.com/able99/minik-hassio-addons",
+  "arch": ["armhf", "amd64", "i386"],
   "startup": "application",
   "boot": "auto",
   "map": ["share:rw"],
